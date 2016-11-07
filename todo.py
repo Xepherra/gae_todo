@@ -15,7 +15,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 # [START main_page]
 class ToDo(webapp2.RequestHandler):
     def get(self):
-        self.response.write("Hello ToDo")
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        self.response.write(template.render())
 # [END main_page]
 
 # [START app]
