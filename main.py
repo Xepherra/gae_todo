@@ -1,11 +1,13 @@
 # [START imports]
 import os
 import urllib
+import json
 
 import jinja2
 import webapp2
 
 from core.models import *
+from core.helper import *
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -29,7 +31,16 @@ class App(webapp2.RequestHandler):
 # [START API handler]
 class ToDoAPI(webapp2.RequestHandler):
     def get(self):
-        self.response.write("Hello API")
+        json_response = json.dumps([td.to_dict() for td in ToDo.query().fetch()],cls=CustomJsonEncoder)
+        self.response.headers['Content-Type'] = "application/json"
+        self.response.write(json_response)
+
+    def post(self):
+        payload = json.loads(self.request.body)
+        new_todo = ToDo()
+        new_todo.title = payload['title']
+        new_todo.put()
+        self.response.write(self.request.body)
 
 # [END API handler]
 
