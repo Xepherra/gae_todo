@@ -2,6 +2,11 @@ from datetime import datetime
 
 import json
 
+'''
+This is a custom JSON encoder which allows for Date serialization
+ndb models used by GAE cannot serialize Date properties using the to_dict method
+this class takes care of that
+'''
 class CustomJsonEncoder(json.JSONEncoder):
    def default(self, obj):
       if isinstance(obj, datetime):
