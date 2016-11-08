@@ -16,7 +16,7 @@ handlers:
   static_dir: static
 
 - url: /.*
-  script: todo.app
+  script: main.app
 # [END handlers]
 
 # [START libraries]
