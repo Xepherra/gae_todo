@@ -29,7 +29,7 @@ class App(webapp2.RequestHandler):
 # [END main_page]
 
 # [START API handler]
-class ToDoAPI(webapp2.RequestHandler):
+class ToDosAPI(webapp2.RequestHandler):
     def get(self):
         json_response = json.dumps([td.to_dict() for td in ToDo.query().fetch()],cls=CustomJsonEncoder)
         self.response.headers['Content-Type'] = "application/json"
@@ -41,12 +41,22 @@ class ToDoAPI(webapp2.RequestHandler):
         new_todo.title = payload['title']
         new_todo.put()
         self.response.write(self.request.body)
-
 # [END API handler]
+
+class ToDoAPI(webapp2.RequestHandler):
+    def get(self,todo_id):
+        todo = ToDo.get_by_id(long(todo_id))
+        if todo is None:
+            self.error(404)
+        else:
+            self.response.write(json.dumps(todo.to_dict(),cls=CustomJsonEncoder))
+    def put(self,todo_id):
+        self.response.write("TBD")
 
 # [START app]
 app = webapp2.WSGIApplication([
     ('/', App),
-    ('/api/todo',ToDoAPI)
+    ('/api/todos',ToDosAPI),
+    ('/api/todo/(\w+)',ToDoAPI)
 ], debug=True)
 # [END app]
